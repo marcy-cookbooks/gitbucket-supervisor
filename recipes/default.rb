@@ -46,8 +46,8 @@ end
 
 remote_file "/usr/local/src/gitbucket/gitbucket.#{node['gitbucket']['version']}.war" do
   source "https://github.com/takezoe/gitbucket/releases/download/#{node['gitbucket']['version']}/gitbucket.war"
-  owner "tomcat"
-  group "tomcat"
+  owner node['gitbucket']['user']
+  group node['gitbucket']['group']
   action :create_if_missing
   notifies :run, "execute[gitbucket-deploy]"
 end
