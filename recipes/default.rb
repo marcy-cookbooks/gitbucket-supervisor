@@ -31,6 +31,8 @@ supervisor_service 'gitbucket' do
 end
 
 directory "/usr/local/src/gitbucket" do
+  owner node['gitbucket']['user']
+  group node['gitbucket']['group']
   action :create
 end
 
