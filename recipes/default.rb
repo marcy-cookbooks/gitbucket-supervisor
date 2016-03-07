@@ -66,6 +66,12 @@ end
 base_url = "#{schema}://#{host}#{node['gitbucket']['prefix']}"
 conf_dir = node['gitbucket']['home'].nil? ? "/home/#{node['gitbucket']['user']}/.gitbucket" : node['gitbucket']['home']
 
+directory ::File.dirname(conf_dir) do
+  owner node['gitbucket']['user']
+  group node['gitbucket']['group']
+  action :create_if_missing
+end
+
 file "#{conf_dir}/gitbucket.conf" do
   owner node['gitbucket']['user']
   group node['gitbucket']['group']
