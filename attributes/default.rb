@@ -1,6 +1,11 @@
 default['java']['jdk_version'] = '8'
+default['gitbucket']['ssl'] = false
 default['gitbucket']['version'] = '3.12'
 default['gitbucket']['user'] = 'gitbucket'
 default['gitbucket']['group'] = 'gitbucket'
+default['gitbucket']['port'] = nil
+default['gitbucket']['prefix'] = nil
+default['gitbucket']['home'] = nil
+default['gitbucket']['host'] = nil
 default['gitbucket']['java_opts'] = {}
 default['gitbucket']['environment'] = {}

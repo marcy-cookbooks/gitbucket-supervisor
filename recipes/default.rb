@@ -16,9 +16,10 @@ group node['gitbucket']['group'] do
 end
 
 cmd = "/usr/bin/java -jar /usr/local/gitbucket.war"
-cmd << " --port #{node['gitbucket']['port']}" if node['gitbucket']['port']
-cmd << "--prefix=#{node['gitbucket']['prefix']}" if node['gitbucket']['prefix']
-cmd << "--gitbucket.home=#{node['gitbucket']['home']}" if node['gitbucket']['home']
+cmd << " --port #{node['gitbucket']['port']}" unless node['gitbucket']['port'].nil?
+cmd << " --prefix=#{node['gitbucket']['prefix']}" unless node['gitbucket']['prefix'].nil?
+cmd << " --host=#{node['gitbucket']['host']}" unless node['gitbucket']['host'].nil?
+cmd << " --gitbucket.home=#{node['gitbucket']['home']}" unless node['gitbucket']['home'].nil?
 
 node['gitbucket']['java_opts'].each do |k, v|
   cmd << " #{k} #{v}"
@@ -50,4 +51,26 @@ remote_file "/usr/local/src/gitbucket/gitbucket.#{node['gitbucket']['version']}.
   group node['gitbucket']['group']
   action :create_if_missing
   notifies :run, "execute[gitbucket-deploy]"
+end
+
+schema = node['gitbucket']['ssl'] ? 'https' : 'http'
+
+host = node['gitbucket']['host']
+if host.nil?
+  if node.has_key?('ec2')
+    host = node['ec2']['public_ipv4']
+  else
+    host = node['ipaddress']
+  end
+end
+base_url = "#{schema}://#{host}#{node['gitbucket']['prefix']}"
+
+file "#{node['gitbucket']['home']}/gitbucket.conf" do
+  owner node['gitbucket']['user']
+  group node['gitbucket']['group']
+  notifies :restart, "supervisor_service[gitbucket]"
+  action :create_if_missing
+  content <<-EOF
+base_url=https://#{}
+EOF
 end
