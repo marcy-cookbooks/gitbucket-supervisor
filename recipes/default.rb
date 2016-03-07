@@ -64,7 +64,7 @@ if host.nil?
   end
 end
 base_url = "#{schema}://#{host}#{node['gitbucket']['prefix']}"
-conf_dir = node['gitbucket']['home'].nil? ? "/home/#{node['gitbucket']['user']}/.gitbucket" ? node['gitbucket']['home']
+conf_dir = node['gitbucket']['home'].nil? ? "/home/#{node['gitbucket']['user']}/.gitbucket" : node['gitbucket']['home']
 
 file "#{conf_dir}/gitbucket.conf" do
   owner node['gitbucket']['user']
