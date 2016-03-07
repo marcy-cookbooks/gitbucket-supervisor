@@ -64,13 +64,14 @@ if host.nil?
   end
 end
 base_url = "#{schema}://#{host}#{node['gitbucket']['prefix']}"
+conf_dir = node['gitbucket']['home'].nil? ? "/home/#{node['gitbucket']['user']}/.gitbucket" ? node['gitbucket']['home']
 
-file "#{node['gitbucket']['home']}/gitbucket.conf" do
+file "#{conf_dir}/gitbucket.conf" do
   owner node['gitbucket']['user']
   group node['gitbucket']['group']
   notifies :restart, "supervisor_service[gitbucket]"
   action :create_if_missing
   content <<-EOF
-base_url=https://#{}
+base_url=#{base_url}
 EOF
 end
